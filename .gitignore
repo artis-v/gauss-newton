@@ -1,0 +1,9 @@
+# Only keep the tex and pdf files for the report
+
+report.*
+!report.tex
+!report.pdf
+
+# Don't publish the instruction file
+
+Project24_Matlab.pdf
