@@ -10,7 +10,6 @@ function [lambda, N_eval] = line_search(F, lambda0, N_eval)
     % N_eval  - Updated function evaluation counter
 
     % Parameters
-    N_eval = 0;        % ! Would need to implement
     alpha = 2;         % Alpha from Alg 3, p.53
     lambda = lambda0;  % Initial lambda
     F0 = F(0);         % Initial F(lambda) value
