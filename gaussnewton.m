@@ -67,8 +67,8 @@ function [x, N_eval, N_iter, normg] = gaussnewton(phi, t, y, x0, tol, printout, 
             % Compute the maximum absolute residual
             max_residual = max(abs(residual));
 
-            fprintf(['Gauss-Newton Iteration %d: Converged with tolerance %.4e' ...
-                'and max(abs(r)) %.4e.\n'], N_iter, tol, max_residual);
+            fprintf(['Gauss-Newton Iteration %d: Converged with tol %.4e,' ...
+                ' max(abs(r)) %.4e.\n'], N_iter, tol, max_residual);
             break; % Exit loop if update step is below the tolerance
         end
 

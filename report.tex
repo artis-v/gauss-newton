@@ -5,6 +5,8 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
+\usepackage{fancyvrb}
+
 \usepackage{listingsutf8}
 \usepackage[apple]{modernlistings} % Can be found at https://gist.github.com/maelquerre/b625bda6cab11c1b0ae67a2be86f027e
 
@@ -82,7 +84,11 @@ So that $\lambda$ satisfies Armijo's rule, we choose it as follows:\begin{enumer
 
 \subsection{Responsibilities}
 
-% Who did what, basically.
+Nicolas ...
+
+Vidar ...
+
+Artis ...
 
 \subsection{Structure}
 
@@ -115,6 +121,78 @@ The results are:
     \\ \hline
 \end{tabular}
 \egroup\end{center}
+
+\subsection{Initial points}
+
+% A table and short discussion on how the convergence 
+% (total number of iterations and function evaluations 
+% for a given tolerance) and the solution are affected 
+% by different initial points.
+
+% A strategy to choose the initial point for phi2.m.
+
+\subsection{Detailed result}
+
+For the \texttt{d2}, $\varphi_2$ case, we present a full printout. The initial point for this example is ${(1,2,3,4)}^T$.
+\scriptsize\begin{Verbatim}[frame=single]
+  Gauss-Newton Iteration 1: Starting line search...
+    Line Search Backtrack Iteration: lambda = 5.0000e-01, F(lambda) = 2.8163e+22
+    Line Search Backtrack Iteration: lambda = 2.5000e-01, F(lambda) = 8.4145e+10
+    Line Search Backtrack Iteration: lambda = 1.2500e-01, F(lambda) = 1.5305e+05
+    Line Search Backtrack Iteration: lambda = 6.2500e-02, F(lambda) = 2.7764e+04
+  Gauss-Newton Iteration 1:
+  x = [-0.1860, 0.3882, 4.7977, 3.2363]
+  max(abs(r)) = 1.0019e+01, norm(grad) = 6.8024e+03, lambda = 6.2500e-02
+  Gauss-Newton Iteration 2: Starting line search...
+    Line Search Backtrack Iteration: lambda = 5.0000e-01, F(lambda) = 2.7633e+06
+    Line Search Backtrack Iteration: lambda = 2.5000e-01, F(lambda) = 1.4590e+04
+  Gauss-Newton Iteration 2:
+  x = [0.7098, -0.8628, 6.2213, 2.9969]
+  max(abs(r)) = 9.4068e+00, norm(grad) = 1.1161e+04, lambda = 2.5000e-01
+  Gauss-Newton Iteration 3: Starting line search...
+  Gauss-Newton Iteration 3:
+  x = [0.8378, -0.3380, 12.8793, 1.4757]
+  max(abs(r)) = 7.0874e+00, norm(grad) = 1.5113e+04, lambda = 1.0000e+00
+  Gauss-Newton Iteration 4: Starting line search...
+  Gauss-Newton Iteration 4:
+  x = [3.4844, 1.2798, 10.2036, 2.5278]
+  max(abs(r)) = 2.3072e+00, norm(grad) = 2.1603e+04, lambda = 1.0000e+00
+  Gauss-Newton Iteration 5: Starting line search...
+  Gauss-Newton Iteration 5:
+  x = [1.6255, 0.2138, 12.2776, 2.7719]
+  max(abs(r)) = 6.2761e-01, norm(grad) = 1.5974e+03, lambda = 1.0000e+00
+  Gauss-Newton Iteration 6: Starting line search...
+  Gauss-Newton Iteration 6:
+  x = [2.6973, 0.7203, 11.1893, 2.7070]
+  max(abs(r)) = 5.4273e-01, norm(grad) = 9.6006e+02, lambda = 1.0000e+00
+  Gauss-Newton Iteration 7: Starting line search...
+    Line Search Iteration: lambda = 2.0000e+00, F(lambda) = 2.0939e+01
+  Gauss-Newton Iteration 7:
+  x = [5.5035, 1.1028, 8.4286, 3.0652]
+  max(abs(r)) = 3.2980e-01, norm(grad) = 8.9192e+02, lambda = 2.0000e+00
+  Gauss-Newton Iteration 8: Starting line search...
+  Gauss-Newton Iteration 8:
+  x = [3.7177, 0.8468, 10.1922, 2.8388]
+  max(abs(r)) = 2.4740e-01, norm(grad) = 2.7354e+02, lambda = 1.0000e+00
+  Gauss-Newton Iteration 9: Starting line search...
+  Gauss-Newton Iteration 9:
+  x = [4.1808, 0.8779, 9.7318, 2.9178]
+  max(abs(r)) = 1.9147e-01, norm(grad) = 3.4489e+02, lambda = 1.0000e+00
+  Gauss-Newton Iteration 10: Starting line search...
+  Gauss-Newton Iteration 10:
+  x = [4.1741, 0.8747, 9.7390, 2.9208]
+  max(abs(r)) = 1.2141e-01, norm(grad) = 7.5698e+00, lambda = 1.0000e+00
+  Gauss-Newton Iteration 11: Starting line search...
+    Line Search Iteration: lambda = 2.0000e+00, F(lambda) = 8.9616e+00
+  Gauss-Newton Iteration 11: Converged with tol 1.0000e-04, max(abs(r)) 1.1817e-01.
+  
+  Final Results:
+  x = [4.1741, 0.8747, 9.7390, 2.9208]
+  Final norm(grad) = 9.5220e-03
+  Total iterations = 11
+  Total function evaluations = 30
+  Total elapsed time: 0.2712 seconds
+\end{Verbatim}
 
 \pagebreak
 
