@@ -1,8 +1,12 @@
 \documentclass[12pt, a4paper]{article}
-\usepackage[a4paper, margin=4cm]{geometry}
+\usepackage[a4paper, margin=3.9cm]{geometry}
+\usepackage[utf8]{inputenc}
 
 \usepackage{amsmath}
 \usepackage{amsfonts}
+
+\usepackage{listingsutf8}
+\usepackage[apple]{modernlistings} % Can be found at https://gist.github.com/maelquerre/b625bda6cab11c1b0ae67a2be86f027e
 
 \setlength\parindent{0pt}
 \setlength\parskip{10pt}
@@ -112,8 +116,35 @@ The results are:
 \end{tabular}
 \egroup\end{center}
 
+\pagebreak
+
+\pagenumbering{gobble}
+
 \section*{Appendix}
 
-% Our program should go in the appendix.
+\subsection*{gaussnewton.m}
+\lstinputlisting[language=Matlab,
+numbers=none, 
+xleftmargin=0pt,
+numbersep=0pt,
+basicstyle=\ttfamily\scriptsize]{gaussnewton.m}
+
+\pagebreak
+
+\subsection*{line\_search.m}
+\lstinputlisting[language=Matlab,
+numbers=none, 
+xleftmargin=0pt,
+numbersep=0pt, 
+basicstyle=\ttfamily\scriptsize]{line_search.m}
+
+\pagebreak
+
+\subsection*{script.m}
+\lstinputlisting[language=Matlab,
+numbers=none, 
+xleftmargin=0pt,
+numbersep=0pt, 
+basicstyle=\ttfamily\scriptsize]{script.m}
 
 \end{document}

@@ -7,3 +7,7 @@ report.*
 # Don't publish the instruction file
 
 Project24_Matlab.pdf
+
+# Don't publish local package copy
+
+modernlistings.sty

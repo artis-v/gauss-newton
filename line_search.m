@@ -23,19 +23,22 @@ function [lambda, N_eval] = line_search(F, lambda0, N_eval)
     while F(alpha*lambda) < F0 + ep * gf * alpha * lambda
         lambda = alpha * lambda;
         N_eval = N_eval + 1;
-        fprintf('  Line Search Iteration: lambda = %.4e, F(lambda) = %.4e\n', lambda, F(lambda));
+        fprintf(['  Line Search Iteration: lambda = %.4e, ' ...
+            'F(lambda) = %.4e\n'], lambda, F(lambda));
     end
 
     % Decrease lambda while F(lambda) is still too large
     while F(lambda) > F0 + ep * gf * lambda
         lambda = lambda / alpha;
         N_eval = N_eval + 1;
-        fprintf('  Line Search Backtrack Iteration: lambda = %.4e, F(lambda) = %.4e\n', lambda, F(lambda));
+        fprintf(['  Line Search Backtrack Iteration: lambda = %.4e, ' ...
+            'F(lambda) = %.4e\n'], lambda, F(lambda));
     end
 
     % Warning to handle invalid or problematic results
     if isnan(F(lambda)) || F(lambda) > F0
-        warning('Potential issue with the line search: F(lambda) = %.4e, F(0) = %.4e', F(lambda), F0);
+        warning(['Potential issue with the line search: ' ...
+            'F(lambda) = %.4e, F(0) = %.4e'], F(lambda), F0);
     end
 
     return;

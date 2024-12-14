@@ -15,8 +15,10 @@ for i = 1:length(a_values)
     test_N_eval = 0;
 
     % Perform line search and track function evaluations
-    [lambda, test_N_eval] = line_search(F, initial_guess, 0); % Start evaluations from 0 for this test
-    total_N_eval = total_N_eval + test_N_eval;                % Add to the total evaluation count
+    % Start evaluations from 0 for this test:
+    [lambda, test_N_eval] = line_search(F, initial_guess, 0); 
+    % Add to the total evaluation count:
+    total_N_eval = total_N_eval + test_N_eval;                
 
     % Calculate expected lambda
     expected_lambda = 1 / 10^a;
@@ -40,7 +42,8 @@ fprintf('Total function evaluations in all tests = %d\n', total_N_eval);
 [t,y] = data1;
 t1 = [0; 0; 0; 0;];         % Neutral start
 t2 = [100; 100; 100; 100];  % Far-from-solution guess
-t3 = [-10; 0; -10; 0;];     % Netagive values (x2 and x4 must >=0 for phi2 || x2 must >= for phi1
+t3 = [-10; 0; -10; 0;];     % Negative values 
+                            % (x2 and x4 must >=0 for phi2, x2 must >= 0 for phi1)
 
 t_choice = t3;              % Current test
 
@@ -80,7 +83,8 @@ for x1 = x1_range
         x0 = [x1; x2]; % Initial guess
         [x, N_eval, N_iter, normg] = gaussnewton(@phi1, t1, y1, x0, 1e-4, 0, 0);
         results_phi1_data1 = [results_phi1_data1; x0', x', N_eval, N_iter, normg];
-        fprintf('Initial: [%.2f, %.2f], Final: [%.2f, %.2f], Iterations: %d, Normg: %.2e\n', ...
+        fprintf(['Initial: [%.2f, %.2f], Final: [%.2f, %.2f], ' ...
+            'Iterations: %d, Normg: %.2e\n'], ...
             x1, x2, x(1), x(2), N_iter, normg);
     end
 end
@@ -93,7 +97,8 @@ for x1 = x1_range
         x0 = [x1; x2]; % Initial guess
         [x, N_eval, N_iter, normg] = gaussnewton(@phi1, t2, y2, x0, 1e-4, 0, 0);
         results_phi1_data2 = [results_phi1_data2; x0', x', N_eval, N_iter, normg];
-        fprintf('Initial: [%.2f, %.2f], Final: [%.2f, %.2f], Iterations: %d, Normg: %.2e\n', ...
+        fprintf(['Initial: [%.2f, %.2f], Final: [%.2f, %.2f], ' ...
+            'Iterations: %d, Normg: %.2e\n'], ...
             x1, x2, x(1), x(2), N_iter, normg);
     end
 end
@@ -119,8 +124,12 @@ for x1 = x1_range
             for x4 = x4_range
                 x0 = [x1; x2; x3; x4]; % Initial guess
                 [x, N_eval, N_iter, normg] = gaussnewton(@phi2, t1, y1, x0, 1e-4, 0, 0);
-                results_phi2_data1 = [results_phi2_data1; x0', x', N_eval, N_iter, normg];
-                fprintf('Initial: [%.2f, %.2f, %.2f, %.2f], Final: [%.2f, %.2f, %.2f, %.2f], Iterations: %d, Normg: %.2e\n', x0(1), x0(2), x0(3), x0(4), x(1), x(2), x(3), x(4), N_iter, normg);
+                results_phi2_data1 = [results_phi2_data1; ...
+                    x0', x', N_eval, N_iter, normg];
+                fprintf(['Initial: [%.2f, %.2f, %.2f, %.2f], ' ...
+                    'Final: [%.2f, %.2f, %.2f, %.2f], ' ...
+                    'Iterations: %d, Normg: %.2e\n'], ...
+                    x0(1), x0(2), x0(3), x0(4), x(1), x(2), x(3), x(4), N_iter, normg);
             end
         end
     end
@@ -142,6 +151,9 @@ for x3 = x3_range
         x0 = [best_x1; best_x2; x3; x4]; % Use best x1 and x2, vary x3 and x4
         [x, N_eval, N_iter, normg] = gaussnewton(@phi2, t2, y2, x0, 1e-4, 0, 0);
         results_phi2_data2 = [results_phi2_data2; x0', x', N_eval, N_iter, normg];
-        fprintf('Initial: [%.2f, %.2f, %.2f, %.2f], Final: [%.2f, %.2f, %.2f, %.2f], Iterations: %d, Normg: %.2e\n', x0(1), x0(2), x0(3), x0(4), x(1), x(2), x(3), x(4), N_iter, normg);
+        fprintf(['Initial: [%.2f, %.2f, %.2f, %.2f], ' ...
+            'Final: [%.2f, %.2f, %.2f, %.2f], ' ...
+            'Iterations: %d, Normg: %.2e\n'], ...
+            x0(1), x0(2), x0(3), x0(4), x(1), x(2), x(3), x(4), N_iter, normg);
     end
 end
