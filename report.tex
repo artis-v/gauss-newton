@@ -1,5 +1,5 @@
 \documentclass[12pt, a4paper]{article}
-\usepackage[a4paper, margin=3.9cm]{geometry}
+\usepackage[a4paper, margin=3.8cm]{geometry}
 \usepackage[utf8]{inputenc}
 
 \usepackage{amsmath}
@@ -41,7 +41,7 @@ To solve this minimization problem, we use the Gauss-Newton method.
 
 \subsection{Gauss-Newton method}
 
-Let $r(\bx)={(r_1(\bx),\ldots,r_m(\bx))}^T$. The method is set up on the idea that \[r(\bx+\bd)\approx r(\bx)+J(\bx)\bd,\]where $J(\bx)$ is the Jacobian matrix of $r(\bx)$ and $\bd$ is an increment vector, also a direction vector.
+Let $r(\bx)={(r_1(\bx),\ldots,r_m(\bx))}^T$. We claim that \[r(\bx+\bd)\approx r(\bx)+J(\bx)\bd,\]where $J(\bx)$ is the Jacobian matrix of $r(\bx)$ and $\bd$ is an increment vector, also a direction vector.
 
 This can be thought of as an extension to more dimensions of the strategy of moving along the tangent line to estimate a nearby value.
 
@@ -59,7 +59,7 @@ This presents the following iterative algorithm:
     \item Determine an optimal step length $\lambda$ for direction $\bd$ using a line search algorithm.
     \item Update $\bx$ to $\bx+\lambda\bd$.
 \end{enumerate}
-We repeat these actions until the step $\lambda\bd$ is smaller than our chosen tolerance.
+We repeat these actions until the step $\lambda\bd$ is smaller than some chosen tolerance. Step size tolerance is a good choice for the stop criterion because we already have to compute $\lambda\bd$ as part of each iteration.
 
 \subsection{Line search algorithm}
 
@@ -68,17 +68,13 @@ For the line search mentioned in the second step of the Gauss-Newton iteration a
 Let $T(\lambda)=F(0)+\varepsilon F'(0)\lambda$ be a straight line through $(0,F(0))$ with less negative slope than the point's tangent, so $0<\varepsilon<1$.
 
 Armijo's rule is made up of two (upper and lower) conditions, which are\[F(\lambda)\le T(\lambda)\quad\text{and}\quad F(\alpha\lambda)\ge T(\alpha\lambda)\text{ for fixed }\alpha>1.\]
-This rule ensures $\lambda$ will be in an \textit{interval} of points where $F $ is substantially smaller. Computationally, this is faster than looking for a perfect choice for $\lambda$.
+This rule ensures $\lambda$ will be in an \textit{interval} of points where $F $ is substantially smaller. Computationally, this is faster than looking for a perfect choice for $\lambda$. This makes an Armijo's rule based algorithm a good choice for this project.
 
 So that $\lambda$ satisfies Armijo's rule, we choose it as follows:\begin{enumerate}
     \item Make an initial guess for $\lambda$.
     \item Repeatedly scale $\lambda$ up by $\alpha$ until it satisfies the lower condition.
     \item Repeatedly scale $\lambda$ down by $\alpha$ until it satisfies the upper condition. 
 \end{enumerate}
-
-% !!
-% This subsection should further motivate why Armijo was chosen.
-% !!
 
 \section{Project work}
 
