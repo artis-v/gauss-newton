@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Opt Table}
+\author{vidargimbringer }
+\date{December 2024}
+
+\begin{document}
+
+\maketitle
+\section{Table}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c c c c|} 
+ \hline
+ Initial Guess & Number of total iterations  & Number of function evaluations  & Solution  \\ 
+ \hline
+ t = [0;0;0;0]& 15 & 49  & x=[6.3446, 10.5865, 6.0959, 1.4003]\\
+ t=[100; 100; 100; 100] & 14 & 80 & x=[6.0959, 1.4003, 6.3445, 10.5865]  \\
+ t=[10; 10; 10; 10] & 11 & 64 & x=[6.0959, 1.4003, 6.3445, 10.5866]  \\
+  t=[1; 1; 1; 1] & 8 & 49 & x=[6.0959, 1.4003, 6.3445, 10.5867]  \\
+t=[-10; 0; -10; 0;]; & 21 & 81 & x=[6.3446, 10.5864, 6.0958, 1.4003] \\
+t=[10; 0; 10; 0;]; & 16 & 59 & x=[6.3445, 10.5866, 6.0959, 1.4003] \\
+t=[-5; 0; -5; 0;]; & 11 & 53 & x=[6.3445, 10.5865, 6.0959, 1.4003] \\
+t=[5; 0; 5; 0;]; & 11 & 54 & x=[6.3446, 10.5864, 6.0959, 1.4003] \\
+t=[-1; 0; -1; 0;]; & 16 & 98 & x=[6.0959, 1.4003, 6.3446, 10.5864] \\
+t=[1; 0; 1; 0;]; & 12 & 60 & x=[6.3446, 10.5863, 6.0958, 1.4003] \\
+t=[-1; 0; -5; 0;]; & 23 & 296 & x=[3.3205, 4013.4884, 9.1190, 3631.4299] \\
+  \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Table of convergence for function phi2 with tol=$10^{-4}$}
+\label{table:1}
+\end{table}
+The function phi2 is defined as \begin{equation}
+    y = x(1)*exp(-x(2)*t) + x(3)*exp(-x(4)*t);
+\end{equation}
+It is easily seen that x(2) and x(4) must be non-negative for this function, as a negative value causes the function to blow up. Thus, we try different approaches with our initial guess and use the number of iterations and function evaluations to define how fast the system converges. After a number of different initial guesses, the most efficient values with the fastest converges appears as t=[1;1;1;1]
+
+\section{Phi2 Guess}
+To find an accurate initial guess for phi2, we can use phi1.
+
+\begin{equation*}
+    \phi_1(x,t) = x(1) \cdot e^{-x(2)t} 
+\end{equation*}
+    
+\begin{equation*}
+        \phi_2(x,t) = x(1) \cdot e^{-x(2)t} + x(3) \cdot e^{-x(4)t}
+\end{equation*}
+\\ \\
+Comparing these two functions, we can use our results from phi1 in order to get a good initial guess for phi2. By running the program multiple times to fit phi1 with data2, to find our final values that will become our initial values for x(1) and x(2) for phi2 on data2. As we have -x(4) in the exponential, we can restrict x(4) values to being non negative, x(3) must be tested through a range of values based on for example minimizing the amount of iterations or function evaluations.
+\end{document}
