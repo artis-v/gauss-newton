@@ -1,26 +1,34 @@
-function [x, N_eval, N_iter, normg] = gaussnewton(phi, t, y, x0, tol, printout, plotout)
+function [x, N_eval, N_iter, max_residual, normg, norms] = ...
+    gaussnewton(phi, t, y, x0, tol, printout, plotout)
+
     tic; % Start timing
 
     % Inputs:
-    % phi      - Function handle for the model function phi(x, t)
-    % t        - Vector of independent variable data
-    % y        - Vector of dependent variable data (observations)
-    % x0       - Initial guess for the parameter vector x
-    % tol      - Tolerance for stopping criteria
-    % printout - Printing intermediate results (1: print, 0: no print)
-    % plotout  - Plotting results (1: plot, 0: no plot)
+    % phi          - Function handle for the model function phi(x, t)
+    % t            - Vector of independent variable data
+    % y            - Vector of dependent variable data (observations)
+    % x0           - Initial guess for the parameter vector x
+    % tol          - Tolerance for stopping criteria 
+    %                (applied to step size and gradient norm)
+    % printout     - Printing intermediate results (1: print, 0: no print)
+    % plotout      - Plotting results (1: plot, 0: no plot)
     
     % Outputs:
-    % x        - Final parameter estimate
-    % N_eval   - Number of function evaluations
-    % N_iter   - Number of iterations performed
-    % normg    - Norm of the gradient at the final parameter estimate
+    % x            - Final estimated parameter vector
+    % N_eval       - Total number of function evaluations during the Gauss-Newton process
+    % N_iter       - Total number of Gauss-Newton iterations performed
+    % max_residual - Maximum absolute residual value at the final parameter estimate
+    %                (NOT used to check convergence)
+    % normg        - Norm of the gradient at the final parameter estimate
+    %                (used to check convergence)
+    % norms        - Norm of the step length at the final parameter estimate 
+    %                (used to check convergence)
 
     % 1. Initialize variables
     x = x0;         % Start with the initial guess
     N_eval = 0;     % Initialize function evaluation counter
     N_iter = 0;     % Initialize iteration counter
-    max_iter = 100; % Set a maximum number of iterations to prevent infinite loops
+    max_iter = 200; % Set a maximum number of iterations to prevent infinite loops
     epsilon = 1e-6; % Regularization parameter for stability
     
     % 2. Define residual and objective function
@@ -45,8 +53,12 @@ function [x, N_eval, N_iter, normg] = gaussnewton(phi, t, y, x0, tol, printout, 
             % Define scalar function for i-th residual
             scalar_ri = @(xi) phi(xi, t(i)) - y(i); % Residual for the i-th data point
             J(i, :) = grad(scalar_ri, x)';          % Use grad.m to compute its gradient
+
+            % Increment function evaluations
+            N_eval = N_eval + 2*n; % grad.m gradient evaluations require two function
+                                   % evals (xplus and xminus) for every parameter in x
         end
-        
+
         % 3.3. Compute search direction
         % Gauss-Newton direction - No regularization term:
         % d = -(J' * J) \ (J' * residual);                               
@@ -56,46 +68,43 @@ function [x, N_eval, N_iter, normg] = gaussnewton(phi, t, y, x0, tol, printout, 
         % 3.4. Perform line search to determine optimal step length
         fprintf('Gauss-Newton Iteration %d: Starting line search...\n', N_iter);
         F = @(lambda) f(x + lambda * d); % Define F(lambda)
-        [lambda, N_eval] = line_search(F, 1, N_eval); % Call line search with init guess
-                                                      % for lambda and update N_eval
+        % Call line search with init guess for lambda, return line search function evals:
+        [lambda, temp_N_eval] = line_search(F, 1, 0, n); 
+        N_eval = N_eval + temp_N_eval; % Add line search evaluations to the total count
 
         % 3.5. Update parameters
         x = x + lambda * d;
 
         % 3.6. Check for convergence
-        if norm(lambda * d) < tol
-            % Compute the maximum absolute residual
-            max_residual = max(abs(residual));
+        max_residual = max(abs(residual)); % Compute the maximum absolute residual
+        norms = norm(lambda * d);          % Compute the Step norm
+        normg = norm(2 * J' * residual);   % Compute the Gradient norm
 
+        % Check both criteria
+        if norms < tol && normg < tol
             fprintf(['Gauss-Newton Iteration %d: Converged with tol %.4e,' ...
                 ' max(abs(r)) %.4e.\n'], N_iter, tol, max_residual);
-            break; % Exit loop if update step is below the tolerance
+            break; % Exit loop if update step and gradient norm is below the tolerance
         end
 
         % Print intermediate results if printout flag is set
         if printout
-            % Compute the maximum absolute residual
-            max_residual = max(abs(residual));
-            
-            % Compute the gradient norm
-            normg = norm(2 * J' * residual);
-            
             % Print the iteration details
             fprintf('Gauss-Newton Iteration %d:\n', N_iter);
             fprintf('x = [%.4f, %.4f, %.4f, %.4f]\n', x);
-            fprintf('max(abs(r)) = %.4e, norm(grad) = %.4e, lambda = %.4e\n', ...
-                max_residual, normg, lambda);
+            fprintf(['max(abs(r)) = %.4e, norm(grad) = %.4e, norm(step) = %.4e,', ... 
+                ' lambda = %.4e\n'], max_residual, normg, norms, lambda);
         end
     end
 
     % Print final results
-    normg = norm(2 * J' * residual); % Final gradient norm
     fprintf('\nFinal Results:\n');
     fprintf('x = [%.4f, %.4f, %.4f, %.4f]\n', x);
+    fprintf('Final max(abs(r)) = %.4e\n', max_residual);
     fprintf('Final norm(grad) = %.4e\n', normg);
-    fprintf('Total iterations = %d\n', N_iter); % Number of Gauss-Newton iterations
-    fprintf('Total function evaluations = %d\n', N_eval); % Evaluations in Gauss-Newton 
-                                                          % and line search
+    fprintf('Final norm(step) = %.4e\n', norms);
+    fprintf('Total iterations = %d\n', N_iter);
+    fprintf('Total function evaluations = %d\n', N_eval);
 
     elapsed_time = toc; % Stop timing
     fprintf('Total elapsed time: %.4f seconds\n', elapsed_time); % Display elapsed time
@@ -106,7 +115,7 @@ function [x, N_eval, N_iter, normg] = gaussnewton(phi, t, y, x0, tol, printout, 
         plot(t, y, 'ro', 'MarkerSize', 6, 'DisplayName', 'Data'); % Plot data points
         hold on;
         % Plot fitted curve:
-        plot(t, phi(x, t), 'b-', 'LineWidth', 1.5, 'DisplayName', 'Fitted Curve'); 
+        plot(t, phi(x, t), 'b-', 'LineWidth', 1.5, 'DisplayName', 'Fitted Curve');
         legend show; % Add a legend
         title('Gauss-Newton Fit');
         xlabel('t'); % Label x-axis
