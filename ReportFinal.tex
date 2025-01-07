@@ -66,7 +66,7 @@ This presents the following iterative algorithm. First, we make an initial guess
 \end{enumerate}
 We repeat these actions until the step $\lambda\bd$ is smaller than some chosen tolerance. Step size tolerance is a good choice for the stop criterion because we already have to compute $\lambda\bd$ as part of each iteration.
 
-As a practical consideration, we have added a small regularization term to the linear system in our implementation, as in \[-({J(\bx)}^T J(\bx)+\varepsilon I)\bd={J(\bx)}^T r(\bx),\] to help prevent numerical instability.
+As a practical consideration, we have added a small regularization term to the linear system in our implementation, as in \[-({J(\bx)}^T J(\bx)+\varepsilon I)\bd={J(\bx)}^T r(\bx),\] to help prevent numerical instability by ensuring J^T J+ϵI is positive definite and invertible, as well as reducing sensitivity to numerical errors by increasing the value of the smallest eigenvalue of the matrix which improves the condition number. Naturally this also improves convergence in the early iterations where the matrix might not be well-conditioned due to the choice of initial points being far from the solution.
 
 \subsection{Line search algorithm}
 
