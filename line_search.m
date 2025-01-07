@@ -1,9 +1,8 @@
-function [lambda, temp_N_eval] = line_search(F, lambda0, N_eval, n)
+function [lambda, temp_N_eval] = line_search(F, lambda0, n)
 
     % Inputs:
     % F           - Function handle for F(lambda)
     % lambda0     - Initial guess for lambda
-    % N_eval      - Function evaluation counter to be updated
     % n           - Number of parameters in x
     
     % Outputs:
