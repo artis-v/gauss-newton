@@ -69,7 +69,7 @@ function [x, N_eval, N_iter, max_residual, normg, norms] = ...
         fprintf('Gauss-Newton Iteration %d: Starting line search...\n', N_iter);
         F = @(lambda) f(x + lambda * d); % Define F(lambda)
         % Call line search with init guess for lambda, return line search function evals:
-        [lambda, temp_N_eval] = line_search(F, 1, 0, n); 
+        [lambda, temp_N_eval] = line_search(F, 1, n); 
         N_eval = N_eval + temp_N_eval; % Add line search evaluations to the total count
 
         % 3.5. Update parameters
