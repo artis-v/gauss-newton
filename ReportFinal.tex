@@ -64,9 +64,9 @@ This presents the following iterative algorithm. First, we make an initial guess
     \item Determine an optimal step length $\lambda$ for direction $\bd$ using a line search algorithm.
     \item Update $\bx$ to $\bx+\lambda\bd$.
 \end{enumerate}
-We repeat these actions until the step $\lambda\bd$ is smaller than some chosen tolerance. Step size tolerance is a good choice for the stop criterion because we already have to compute $\lambda\bd$ as part of each iteration.
+We repeat these actions until the step $\lambda\bd$ is smaller than some chosen tolerance. Step size tolerance is a good choice for the stop criterion because we already have to compute $\lambda\bd$ as part of each iteration. \textbf{As well as adding a second stop criterion by checking the gradient.}
 
-As a practical consideration, we have added a small regularization term to the linear system in our implementation, as in \[-({J(\bx)}^T J(\bx)+\varepsilon I)\bd={J(\bx)}^T r(\bx),\] to help prevent numerical instability by ensuring $J^T J+ϵI$ is positive definite and invertible, as well as reducing sensitivity to numerical errors by increasing the value of the smallest eigenvalue of the matrix which improves the condition number. Naturally this also improves convergence in the early iterations where the matrix might not be well-conditioned due to the choice of initial points being far from the solution.
+As a practical consideration, we have added a small regularization term to the linear system in our implementation, as in \[-({J(\bx)}^T J(\bx)+\varepsilon I)\bd={J(\bx)}^T r(\bx),\] \textbf{to help prevent numerical instability by ensuring $J^T J+\epsilon I$ is positive definite and invertible, as well as reducing sensitivity to numerical errors by increasing the value of the smallest eigenvalue of the matrix which improves the condition number. Naturally this also improves convergence in the early iterations where the matrix might not be well-conditioned due to the choice of initial points being far from the solution.}
 
 \subsection{Line search algorithm}
 
@@ -107,23 +107,30 @@ Vidar and Artis worked together on creating the $\textit{\LaTeX}$ report for the
 \subsection{Results}
 
 We fit the two functions from phi1.m and phi2.m, \[\varphi_1(\bx;t)=x_1e^{-x_2t},\quad\bx={(x_1,x_2)}^T\] and \[\varphi_2(\bx;t)=\varphi(\bx; t)=x_1e^{-x_2t}+x_3e^{-x_4t},\quad\bx={(x_1,x_2,x_3,x_4)}^T,\] to the two sets of data points \texttt{data1} and \texttt{data2} from data1.m and data2.m. Throughout, $x_n=n$ is used for the initial guess. The results are:
-\begin{center}\bgroup\def\arraystretch{1.4}
+\begin{center}
+\hspace*{-2.8cm}% Adjust this value to shift the table left
+\bgroup
+\def\arraystretch{1.4}
 \begin{tabular}%
   {|>{\raggedright\arraybackslash}p{1.8cm}%
     >{\raggedright\arraybackslash}p{6cm}%
     >{\centering\arraybackslash}p{2.3cm}%
-    >{\centering\arraybackslash}p{1.5cm}|}
+    >{\centering\arraybackslash}p{1.5cm}%
+    >{\centering\arraybackslash}p{3cm}%
+    >{\centering\arraybackslash}p{1cm}%
+    >{\centering\arraybackslash}p{0.5cm}|}
     \hline
-    Case & Optimal point $\bx$ & $\Vert \nabla f(\bx) \Vert_2$ & $\Vert r(\bx) \Vert_{\infty}$
-    \\ \hline
+    Case & Optimal point $\bx$ & $\Vert \nabla f(\bx) \Vert_2$ & $\Vert r(\bx) \Vert_{\infty}$ &  $\mathbf{\Vert \delta \Vert_2}$ & \textbf{tol}&\\ 
+    
+    \hline
     \texttt{data1}, $\varphi_1$ & ${(10.8108, 2.4786)}^T$ & $3.7450\cdot10^{-4}$ & $1.6287$
-    \\
-    \texttt{data2}, $\varphi_1$ & ${(12.9789, 1.7861)}^T$ & $8.0031\cdot10^{-2}$ & $1.0397$
-    \\
+    & $\mathbf{2.2482\cdot10^{-16}}$ & $\mathbf{10^{-4}}$ &\\
+    \texttt{data2}, $\varphi_1$ & ${(12.9789, 1.7861)}^T$ & $\mathbf{1.4851\cdot10^{-2}}$ & $1.0397$
+    &$\mathbf{2.2780\cdot10^{-16}}$ & $\mathbf{10^{-4}}$ &\\
     \texttt{data1}, $\varphi_2$ & ${(6.3445, 10.5866, 6.0959, 1.4003)}^T$ & $4.0651\cdot10^{-5}$ & $0.4334$
-    \\
-    \texttt{data2}, $\varphi_2$ & ${(4.1741, 0.8747, 9.7390, 2.9208)}^T$ & $9.5220\cdot10^{-3}$ & $0.1182$
-    \\ \hline
+    & $\mathbf{3.2203\cdot10^{-11}}$ & $\mathbf{10^{-4}}$&\\
+    \texttt{data2}, $\varphi_2$ & ${(4.1741, 0.8747, 9.7390, 2.9208)}^T$ & $\mathbf{1.2611\cdot10^{-5}}$ & $0.1182$
+    &$\mathbf{1.4394\cdot10^{-12}}$ & $\mathbf{10^{-4}}$ & \\ \hline
 \end{tabular}
 \egroup\end{center}
 
@@ -135,33 +142,38 @@ It is easily seen that $x_2$ and $x_4$ must be non-negative for this function, a
 
 We use the number of iterations and function evaluations to define how fast the system converges. 
 
-\begin{center}\bgroup\def\arraystretch{1.4}
+\begin{center}
+\bgroup
+\def\arraystretch{1.4}
 {\small
 \begin{tabular}%
   {|>{\raggedright\arraybackslash}p{2cm}%
     >{\raggedleft\arraybackslash}p{2cm}%
     >{\raggedright\arraybackslash}p{2cm}%
-    w{r}{5.6cm}|}
+    >{\raggedright\arraybackslash}p{5.6cm}%
+    >{\raggedright\arraybackslash}p{2cm}|}
   \hline
-  Initial guess $\bx_0$ & Total iterations & Function evaluations & \vtop{\hbox{\strut{Optimal}}\hbox{\strut{ point $\bx$}}} \\ 
+  Initial guess $\bx_0$ & Total iterations & Function evaluations & \vtop{\hbox{\strut{Optimal}}\hbox{\strut{point $\bx$}}} & $\mathbf{\Vert r(\bx) \Vert_{\infty}}$\\  
+
   \hline
-  ${(0,0,0,0)}^T$ & $15$ & $49$ & ${(6.3446, 10.5865, 6.0959, 1.4003)}^T$ \\
-  ${(100, 100, 100, 100)}^T$ & $14$ & $80$ & ${(6.0959, 1.4003, 6.3445, 10.5865)}^T$ \\
-  ${(10, 10, 10, 10)}^T$ & $11$ & $64$ & ${(6.0959, 1.4003, 6.3445, 10.5866)}^T$ \\
-  ${(1, 1, 1, 1)}^T$ & $8$ & $49$ & ${(6.0959, 1.4003, 6.3445, 10.5867)}^T$ \\
-  ${(-10, 0, -10, 0)}^T$ & $21$ & $81$ & ${(6.3446, 10.5864, 6.0958, 1.4003)}^T$ \\
-  ${(10, 0, 10, 0)}^T$ & $16$ & $59$ & ${(6.3445, 10.5866, 6.0959, 1.4003)}^T$ \\
-  ${(-5, 0, -5, 0)}^T$ & $11$ & $53$ & ${(6.3445, 10.5865, 6.0959, 1.4003)}^T$ \\
-  ${(5, 0, 5, 0)}^T$ & $11$ & $54$ & ${(6.3446, 10.5864, 6.0959, 1.4003)}^T$ \\
-  ${(-1, 0, -1, 0)}^T$ & $16$ & $98$ & ${(6.0959, 1.4003, 6.3446, 10.5864)}^T$ \\
-  ${(1, 0, 1, 0)}^T$ & $12$ & $60$ & ${(6.3446, 10.5863, 6.0958, 1.4003)}^T$ \\
-  ${(-1, 0, -5, 0)}^T$ & $23$ & $296$ & ${(3.3205, 4013.4884, 9.1190, 3631.4299)}^T$ \\
+  ${(0,0,0,0)}^T$ & $15$ & $\mathbf{2689}$ & ${(6.3446, 10.5865, 6.0959, 1.4003)}^T$ & $\mathbf{0.43341}$\\
+  ${(100, 100, 100, 100)}^T$ & $14$ & $\mathbf{2544}$ & ${(6.0959, 1.4003, 6.3445, 10.5865)}^T$ & $\mathbf{0.43341}$ \\
+  ${(10, 10, 10, 10)}^T$ & $11$ & $\mathbf{2000}$ & ${(6.0959, 1.4003, 6.3445, 10.5866)}^T$ & $\mathbf{0.43341}$\\
+  ${(1, 1, 1, 1)}^T$ & $8$ & $\mathbf{1457}$ & ${(6.0959, 1.4003, 6.3445, 10.5867)}^T$ & $\mathbf{0.43340}$ \\
+  ${(-10, 0, -10, 0)}^T$ & $21$ & $\mathbf{3777}$ & ${(6.3446, 10.5864, 6.0958, 1.4003)}^T$ & $\mathbf{0.43341}$\\
+  ${(10, 0, 10, 0)}^T$ & $16$ & $\mathbf{2715}$ & ${(6.3445, 10.5866, 6.0959, 1.4003)}^T$ &$\mathbf{0.43341}$ \\
+  ${(-5, 0, -5, 0)}^T$ & $11$ & $\mathbf{1989}$ & ${(6.3445, 10.5865, 6.0959, 1.4003)}^T$ & $\mathbf{0.43341}$\\
+  ${(5, 0, 5, 0)}^T$ & $11$ & $\mathbf{1990}$ & ${(6.3446, 10.5864, 6.0959, 1.4003)}^T$ & $\mathbf{0.43341}$\\
+  ${(-1, 0, -1, 0)}^T$ & $16$ & $\mathbf{2914}$ & ${(6.0959, 1.4003, 6.3446, 10.5864)}^T$ & $\mathbf{0.43341}$\\
+  ${(1, 0, 1, 0)}^T$ & $12$ & $\mathbf{2172}$ & ${(6.3446, 10.5863, 6.0958, 1.4003)}^T$ & $\mathbf{0.43342}$\\
+  ${(-1, 0, -5, 0)}^T$ & $23$ & $\mathbf{4344}$ & ${(3.321, 4013.488, 9.119, 3631.430)}^T$ & $\mathbf{7.520}$\\
   \hline
 \end{tabular}
 }
 \egroup\end{center}
 
-The most efficient initial guess with the fastest convergence appears to be \[\bx_0={(1,1,1,1)}^T.\]
+\textbf{It appears that we find two different optimal points when looking at the max residuals. However when taking a closer look at the function $\varphi_2$ it is apparent that the optimal points give the same value as they have simply switched x1 with x3 and x2 with x4. The most efficient initial guesses with the fastest convergences is}
+\[\bx_0={(1,1,1,1)}^T \] 
 
 \subsection{Initial guess strategy}
 
@@ -239,6 +251,8 @@ For the \texttt{data2}, $\varphi_2$ case, we present a full printout. The initia
 \pagebreak
 
 \pagenumbering{gobble}
+
+
 
 \section*{Appendix}
 
